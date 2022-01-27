@@ -114,6 +114,37 @@ app.get('/statement/date', verifyIfExistsAccountCPF, (request, response) => {
   return response.json(statements)
 })
 
+app.put('/account', verifyIfExistsAccountCPF, (request, response) => {
+  const { name } = request.body // o cpf eu não posso atualizar. Por isso atualizo apenas o nome.
+  const { customer } = request
+
+  customer.name = name
+
+  return response.status(201).send()
+})
+
+app.get('/account', verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  return response.json(customer)
+})
+
+app.delete('/account', verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  customers.splice(customer, 1)
+
+  return response.status(200).json(customers)
+})
+
+app.get('/balance', verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  const balance = getBalance(customer.statement)
+
+  return response.json(balance)
+})
+
 app.listen(port, () => {
   console.log(`O servidor está rodando na porta ${port}`)
 })
